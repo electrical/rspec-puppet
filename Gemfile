@@ -3,13 +3,13 @@ source 'https://rubygems.org'
 if ENV['PUPPET_VERSION']
   puppetversion = "= #{ENV['PUPPET_VERSION']}"
 else
-  puppetversion = '~> 3.0'
+  puppetversion = '4.0.0.rc1'
 end
 
 if ENV['RSPEC_VERSION']
   rspecversion = "= #{ENV['RSPEC_VERSION']}"
 else
-  rspecversion = '~> 2.0'
+  rspecversion = '~> 3.0'
 end
 
 gem 'rake'

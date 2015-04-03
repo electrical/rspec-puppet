@@ -1,4 +1,4 @@
-class boolean($bool) {
+class boolean_test($bool) {
   $real_bool = $bool ? {
     true => false,
     false => true,

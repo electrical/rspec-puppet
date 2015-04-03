@@ -10,7 +10,7 @@ module RSpec::Puppet
     def load_catalogue(type)
       vardir = setup_puppet
 
-      if Puppet[:parser] == 'future'
+      if Puppet[:parser] == 'future' || Puppet.version.to_f >= 4.0
         code = [pre_cond, test_manifest(type)].join("\n")
       else
         code = [import_str, pre_cond, test_manifest(type)].join("\n")
@@ -138,11 +138,13 @@ module RSpec::Puppet
         begin
           Puppet[a] = value
         rescue ArgumentError
-          Puppet.settings.setdefaults(:main, {a => {:default => value, :desc => a.to_s}})
+          Puppet.settings.define_settings(:main, {a => {:default => value, :desc => a.to_s}})
         end
       end
-
-      Puppet[:libdir] = Dir["#{Puppet[:modulepath]}/*/lib"].entries.join(File::PATH_SEPARATOR)
+      Dir["#{Puppet[:modulepath]}/*/lib"].entries.each do |lib|
+        $LOAD_PATH << lib
+      end
+#     Puppet[:libdir] = Dir["#{Puppet[:modulepath]}/*/lib"].entries.join(File::PATH_SEPARATOR)
       vardir
     end
 
@@ -199,7 +201,7 @@ module RSpec::Puppet
     end
 
     def build_node(name, opts = {})
-      node_environment = Puppet::Node::Environment.new('test')
+      node_environment = Puppet::Node::Environment.create('test', [] )
       opts.merge!({:environment => node_environment})
       Puppet::Node.new(name, opts)
     end
