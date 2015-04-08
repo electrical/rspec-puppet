@@ -9,15 +9,12 @@ module RSpec::Puppet
 
       vardir = setup_puppet
 
-      node_name = nodename(:function)
-
-      function_scope = scope(compiler, node_name)
-
       # Return the method instance for the function.  This can be used with
       # method.call
-      return nil unless Puppet::Parser::Functions.function(function_name)
       FileUtils.rm_rf(vardir) if File.directory?(vardir)
-      function_scope.method("function_#{function_name}".intern)
+      env = Puppet::Node::Environment.create(:testing, [])
+      loaders = Puppet::Pops::Loaders.new(env)
+      loaders.public_environment_loader.load(:function, function_name)
     end
 
     def catalogue

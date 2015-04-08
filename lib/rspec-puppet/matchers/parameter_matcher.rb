@@ -86,13 +86,12 @@ module RSpec::Puppet
       # with a matching value.
       def check_hash(expected, actual)
         op = @should_match ? :"==" : :"!="
-
         unless expected.keys.size.send(op, actual.keys.size)
           return false
         end
 
         expected.keys.all? do |key|
-          check(expected[key], actual[key.to_s])
+          check(expected[key], actual[key])
         end
       end
 
